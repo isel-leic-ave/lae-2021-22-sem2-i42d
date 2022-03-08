@@ -32,4 +32,5 @@ data class Point(val x: Int, val y: Int) : Any() {
      * Os bytecodes de inicialização do module estão no construtor de Point.
      */
     val module = sqrt((x*x + y*y).toDouble())
+    val z: Int = 0
 }

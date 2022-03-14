@@ -23,6 +23,9 @@ dependencies {
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
+    // For using the reflection features
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 

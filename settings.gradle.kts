@@ -9,3 +9,4 @@
 
 rootProject.name = "lae-i42d"
 include("aula04-reflect")
+include("aula05-reflect-instance-and-func-call")

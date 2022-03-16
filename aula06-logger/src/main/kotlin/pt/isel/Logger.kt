@@ -1,17 +1,26 @@
 package pt.isel
 
-import pt.isel.LoggerKind.FIELDS
+import pt.isel.LoggerKind.FUNCTIONS
 import pt.isel.LoggerKind.PROPERTIES
-import kotlin.reflect.full.memberProperties
+import kotlin.reflect.KFunction
+import kotlin.reflect.full.*
 
-class Logger(val out: Printer = PrinterConsole(), val kind: LoggerKind = PROPERTIES) {
-    fun log(target: Any) = when(kind) {
+class Logger(
+    private val out: Printer = PrinterConsole(),
+    private val kind: LoggerKind = PROPERTIES)
+{
+    fun log(target: Any) {
+        out.print(target::class.qualifiedName)
+        out.print(" {")
+        logMembers(target)
+        out.println("}")
+    }
+    private fun logMembers(target: Any) = when(kind) {
         PROPERTIES ->  logProperties(target)
-        FIELDS -> logFields(target)
+        FUNCTIONS -> logFunctions(target)
     }
 
-    private fun logFields(target: Any) {
-
+    private fun logFunctions(target: Any) {
     }
 
     /**
@@ -19,12 +28,9 @@ class Logger(val out: Printer = PrinterConsole(), val kind: LoggerKind = PROPERT
      * corresponding to the value of its properties.
      */
     private fun logProperties(target: Any) {
-        out.print(target::class.qualifiedName)
-        out.print(" {")
         target::class
                 .memberProperties
-                .joinToString(",") { "${it.name} = ${it.call(target)}"}
+                .joinToString(",") { "${it.name} = ${it.call(target)}" }
                 .let { out.print(it) }
-        out.println("}")
     }
 }

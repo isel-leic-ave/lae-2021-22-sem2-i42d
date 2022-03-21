@@ -21,7 +21,7 @@ class LoggerTest {
     }
 
     @Test fun testLogAccountProperties() {
-        val expected = "pt.isel.SavingsAccount {annualInterestRate = 2.5,balance = 1000}${System.lineSeparator()}"
+        val expected = "pt.isel.SavingsAccount {annualInterestRate = 2.5,balance = 1000,}${System.lineSeparator()}"
         val a = SavingsAccount(1000, 2.5)
         val out = PrinterStringBuffer()
         val logger = Logger(out, LoggerKind.PROPERTIES)

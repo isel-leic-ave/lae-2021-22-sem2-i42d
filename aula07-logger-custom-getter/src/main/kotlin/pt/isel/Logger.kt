@@ -2,8 +2,10 @@ package pt.isel
 
 import pt.isel.LoggerKind.FUNCTIONS
 import pt.isel.LoggerKind.PROPERTIES
-import kotlin.reflect.KFunction
-import kotlin.reflect.full.*
+import kotlin.reflect.KClass
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.declaredMembers
+import kotlin.reflect.full.memberProperties
 
 class Logger(
     private val out: Printer = PrinterConsole(),
@@ -12,25 +14,43 @@ class Logger(
     fun log(target: Any) {
         out.print(target::class.qualifiedName)
         out.print(" {")
-        logMembers(target)
+        loadGetters(target::class).forEach{ it.readAndPrint(target) }
         out.println("}")
     }
-    private fun logMembers(target: Any) = when(kind) {
-        PROPERTIES ->  logProperties(target)
-        FUNCTIONS -> logFunctions(target)
+    private fun loadGetters(klass: KClass<*>) : List<Getter> {
+        return when(kind) {
+            PROPERTIES ->  loadGetterProperties(klass)
+            FUNCTIONS -> loadGetterFunctions(klass)
+        }
     }
 
-    private fun logFunctions(target: Any) {
+    val unitType = kotlin.Unit::class.createType()
+    val getters : MutableMap<KClass<*>, List<Getter>> = mutableMapOf()
+
+    private fun loadGetterFunctions(klass: KClass<*>) : List<Getter> {
+        return getters.computeIfAbsent(klass, ::createGetterFunctions)
+    }
+    private fun createGetterFunctions(klass: KClass<*>) : List<Getter> {
+         return klass
+            .declaredMembers
+            .filter{ (it.parameters.size == 1) && it.returnType != unitType }
+            .map { prop -> object : Getter {
+                    override fun readAndPrint(target: Any) {
+                        val v = prop.call(target)
+                        out.print("${prop.name}() = $v,")
+                    }
+            }}
     }
 
-    /**
-     * Prints to console the object's state,
-     * corresponding to the value of its properties.
-     */
-    private fun logProperties(target: Any) {
-        target::class
+    private fun loadGetterProperties(klass: KClass<*>) : List<Getter> {
+        return klass
                 .memberProperties
-                .joinToString(",") { "${it.name} = ${it.call(target)}" }
-                .let { out.print(it) }
+                .map { prop ->
+                object : Getter {
+                    override fun readAndPrint(target: Any) {
+                        val v = prop.call(target)
+                        out.print("${prop.name} = $v,")
+                    }
+                }}
     }
 }

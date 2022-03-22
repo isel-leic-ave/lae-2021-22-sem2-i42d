@@ -24,12 +24,18 @@ class Logger(
         }
     }
 
-    val unitType = kotlin.Unit::class.createType()
-    val getters : MutableMap<KClass<*>, List<Getter>> = mutableMapOf()
+
+    private val unitType = Unit::class.createType()
+    private val getters : MutableMap<KClass<*>, List<Getter>> = mutableMapOf()
 
     private fun loadGetterFunctions(klass: KClass<*>) : List<Getter> {
         return getters.computeIfAbsent(klass, ::createGetterFunctions)
     }
+
+    private fun loadGetterProperties(klass: KClass<*>): List<Getter> {
+        return getters.computeIfAbsent(klass, ::createGetterProperties)
+    }
+
     private fun createGetterFunctions(klass: KClass<*>) : List<Getter> {
          return klass
             .declaredMembers
@@ -42,7 +48,7 @@ class Logger(
             }}
     }
 
-    private fun loadGetterProperties(klass: KClass<*>) : List<Getter> {
+    private fun createGetterProperties(klass: KClass<*>) : List<Getter> {
         return klass
                 .memberProperties
                 .map { prop ->

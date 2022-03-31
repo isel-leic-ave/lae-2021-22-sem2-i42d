@@ -23,8 +23,6 @@ dependencies {
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
-    implementation(project(":aula10-logger-with-fornatter"))
-
     // For using the reflection features
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 

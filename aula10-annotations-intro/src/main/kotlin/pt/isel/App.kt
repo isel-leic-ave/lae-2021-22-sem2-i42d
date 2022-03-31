@@ -1,32 +1,19 @@
 package pt.isel
 
-import java.lang.reflect.ParameterizedType
 import java.net.URL
 import java.net.URLClassLoader
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
-import kotlin.reflect.full.declaredMembers
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 
 const val poetJar = "https://repo1.maven.org/maven2/com/squareup/javapoet/1.13.0/javapoet-1.13.0.jar"
 
-class A(val foo: List<Int>)
-
 fun main() {
-    A::class
-        .declaredMembers
-        .forEach {
-            val klass = it.returnType.classifier as KClass<*>
-            val superType =  klass.java.genericInterfaces[0] as ParameterizedType
-            println(superType.actualTypeArguments[0])
-            println(superType.rawType)
-        }
-
-//    listClasses(URL(poetJar))
-//            .forEach { println(it) }
+    listClasses(URL(poetJar))
+            .forEach { println(it) }
 }
 
 fun listClasses(url: URL) : List<KClass<*>> {

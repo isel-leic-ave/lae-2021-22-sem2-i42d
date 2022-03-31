@@ -1,5 +1,6 @@
 package pt.isel
 
+import pt.isel.Student.Address
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -39,7 +40,7 @@ class LoggerTest {
     }
 
     @Test fun testLogPointToDefaultOutput() {
-        Logger().log(Point(5,7))
+        Logger().log(Student(7613, "Ze Manel", Address(67, "Rua das Papoilas")))
     }
 }
 

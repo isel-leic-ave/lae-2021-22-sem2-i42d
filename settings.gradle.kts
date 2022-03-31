@@ -8,4 +8,6 @@ rootProject.name = "lae-i42d"
 include("aula04-reflect")
 include("aula05-reflect-instance-and-func-call")
 include("aula06-sample-domain")
-include("aula07-logger-custom-getter")
+
+include("aula10-annotations-intro")
+include("aula10-logger-with-fornatter")

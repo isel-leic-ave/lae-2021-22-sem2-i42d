@@ -4,9 +4,18 @@ import com.squareup.javapoet.JavaFile
 import java.io.File
 import java.net.URLClassLoader
 import javax.tools.ToolProvider
+import kotlin.reflect.full.declaredFunctions
 
 
 fun main() {
+    val myDynamic = loadAndCreateInstance(buildMyDynamic(), 29) as Multiplier
+    /*
+    val res = myDynamic::class
+        .declaredFunctions
+        .find { it.name == "mul" }
+        ?.call(myDynamic, 2)
+     */
+    println(myDynamic.mul(2))
 }
 
 

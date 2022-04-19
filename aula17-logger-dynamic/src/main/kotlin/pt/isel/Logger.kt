@@ -39,18 +39,18 @@ class Logger(
             .declaredMembers
             .filter{ (it.parameters.size == 1) && it.returnType != unitType }
             .filter { it.hasAnnotation<ToLog>() }
-            .map { prop -> object : Getter {
+            .map { func -> object : Getter {
                     val formatter: KClass<*>? =
-                        if(prop.findAnnotation<ToLog>()?.formatter == Unit::class) null
-                        else prop.findAnnotation<ToLog>()?.formatter
+                        if(func.findAnnotation<ToLog>()?.formatter == Unit::class) null
+                        else func.findAnnotation<ToLog>()?.formatter
                     override fun readAndPrint(target: Any) {
-                        val v = prop.call(target)
+                        val v = func.call(target)
                         val res = formatter?.let {
                             val f = it.createInstance() as Formatter
                             "\"${f.format(v)}\""
                         }
                         ?: v
-                        out.print("${prop.name}() = $res,")
+                        out.print("${func.name}() = $res,")
                     }
             }}
     }

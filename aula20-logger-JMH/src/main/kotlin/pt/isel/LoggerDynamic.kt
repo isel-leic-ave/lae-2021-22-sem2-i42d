@@ -16,9 +16,9 @@ class LoggerDynamic(
             .declaredMembers
             .filter{ (it.parameters.size == 1) && it.returnType != unitType }
             .filter { it.hasAnnotation<ToLog>() }
-            .map { func -> if(func.findAnnotation<ToLog>()?.formatter == Unit::class)
-                GetterFunction(out, func)
-                else GetterFunctionFormatter(out, func)
+            .map { func ->
+                val getterFile = buildGetterFunc(klass, func)
+                loadAndCreateInstance(getterFile, out) as Getter
             }
     }
 
@@ -26,9 +26,9 @@ class LoggerDynamic(
         return klass
             .memberProperties
             .filter { it.hasAnnotation<ToLog>() }
-            .map { prop -> if(prop.findAnnotation<ToLog>()?.formatter == Unit::class)
-                GetterProperty(out, prop)
-                else GetterPropertyFormatter(out, prop)
+            .map { prop ->
+                val getterFile = buildGetterProperty(klass, prop)
+                loadAndCreateInstance(getterFile, out) as Getter
             }
     }
 }

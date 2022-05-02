@@ -10,8 +10,7 @@ plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm")
 
-    // Apply the application plugin to add support for building a CLI application in Java.
-    application
+    id("me.champeau.jmh") version "0.6.6"
 }
 
 // Test Logging
@@ -43,9 +42,4 @@ dependencies {
 
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-}
-
-application {
-    // Define the main class for the application.
-    mainClass.set("pt.isel.AppKt")
 }

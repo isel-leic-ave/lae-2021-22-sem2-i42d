@@ -9,6 +9,20 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.javaMethod
 
+/**
+ * Generate a class that implements Getter similar to:
+ *
+ * class Getter_Prop_SavingsAccount_balance implements Getter {
+ *    private final Printer out;
+ *    public Getter_Prop_SavingsAccount_balance(Printer out) {
+ *      this.out = out;
+ *    }
+ *    public void readAndPrint(Object target) {
+ *      Object v = ((SavingsAccount) target).getBalance();
+ *      out.print("balance = " + v + ",");
+ *    }
+ *  }
+ */
 fun buildGetterProperty(klass: KClass<*>, prop: KProperty<*>) : JavaFile {
 
     val fieldOut = FieldSpec

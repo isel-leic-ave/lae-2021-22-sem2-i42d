@@ -3,7 +3,6 @@ package pt.isel
 import pt.isel.LoggerKind.FUNCTIONS
 import pt.isel.LoggerKind.PROPERTIES
 import kotlin.reflect.KClass
-import kotlin.reflect.full.*
 
 abstract class AbstractLogger(
     protected val out: Printer = PrinterConsole(),

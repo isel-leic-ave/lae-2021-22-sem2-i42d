@@ -10,8 +10,14 @@ plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm")
 
-    // Apply the application plugin to add support for building a CLI application in Java.
-    application
+    id("me.champeau.jmh") version "0.6.6"
+}
+
+// Test Logging
+tasks.withType<Test> {
+    testLogging {
+        events("started", "passed", "skipped", "failed")
+    }
 }
 
 repositories {
@@ -20,10 +26,10 @@ repositories {
 }
 
 dependencies {
+    implementation("com.squareup:javapoet:1.13.0")
+
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-
-    implementation(project(":aula23-logger-dynamic-no-boxing"))
 
     // For using the reflection features
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -36,9 +42,4 @@ dependencies {
 
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-}
-
-application {
-    // Define the main class for the application.
-    mainClass.set("pt.isel.AppKt")
 }

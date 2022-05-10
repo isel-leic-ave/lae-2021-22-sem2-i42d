@@ -19,8 +19,10 @@ import kotlin.reflect.jvm.javaMethod
  *      this.out = out;
  *    }
  *    public void readAndPrint(Object target) {
- *      Object v = ((SavingsAccount) target).getBalance();
- *      out.print("balance = " + v + ",");
+ *      int v = ((SavingsAccount) target).getBalance();
+ *      out.print("balance = ");
+ *      out.print(v);
+ *      out.print(",");
  *    }
  *  }
  */
@@ -42,8 +44,11 @@ fun buildGetterProperty(klass: KClass<*>, prop: KProperty<*>) : JavaFile {
         .methodBuilder("readAndPrint")
         .addModifiers(Modifier.PUBLIC)
         .addParameter(Any::class.java, "target")
-        .addStatement("Object v =((${klass.qualifiedName}) target).${prop.getter.javaMethod?.name}()")
-        .addStatement("out.print(\"${prop.name} = \" + v + \",\")")
+        .addStatement("\$T v =((${klass.qualifiedName}) target).${prop.getter.javaMethod?.name}()",
+            (prop.returnType.classifier as KClass<*>).java)
+        .addStatement("out.print(\"${prop.name} = \")")
+        .addStatement("out.print(v)")
+        .addStatement("out.print(\",\")")
         .build()
 
     val getter = TypeSpec
@@ -79,8 +84,11 @@ fun buildGetterFunc(klass: KClass<*>, func: KCallable<*>) : JavaFile {
         .methodBuilder("readAndPrint")
         .addModifiers(Modifier.PUBLIC)
         .addParameter(Any::class.java, "target")
-        .addStatement("Object v =((${klass.qualifiedName}) target).${funcName}()")
-        .addStatement("out.print(\"${func.name}() = \" + v + \",\")")
+        .addStatement("\$T v =((${klass.qualifiedName}) target).${funcName}()",
+            (func.returnType.classifier as KClass<*>).java)
+        .addStatement("out.print(\"${func.name}() = \")")
+        .addStatement("out.print(v)")
+        .addStatement("out.print(\",\")")
         .build()
 
     val getter = TypeSpec

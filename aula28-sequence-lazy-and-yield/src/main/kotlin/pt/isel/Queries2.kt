@@ -19,3 +19,10 @@ fun <T> Iterable<T>.where(predicate: (T) -> Boolean): Iterable<T> {
     }
     return res
 }
+
+fun <T> Iterable<T>.concat(other: Iterable<T>): Iterable<T> {
+    val res = mutableListOf<T>()
+    for (item in this) { res.add(item) }
+    for (item in other) { res.add(item) }
+    return res
+}

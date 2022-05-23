@@ -10,6 +10,7 @@ import java.nio.file.Files
 import kotlin.io.path.toPath
 import kotlin.streams.asSequence
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
 class Queries5Test {
@@ -29,4 +30,34 @@ class Queries5Test {
             .next()
         assertEquals("Almeida", actual)
     }
+
+    @Test fun `Concat two sequences of strings with Lazy implementation of Iterable`() {
+        val first = listOf("Portugal", "Football", "Teams")
+        val other = listOf("FCP", "The", "Champion")
+        val actual: Iterable<String> = first.concatLazy(other)
+        val expected = listOf("Portugal", "Football", "Teams", "FCP", "The", "Champion")
+        assertContentEquals(expected, actual)
+    }
+    @Test fun `Concat two sequences of strings with Lazy implementation of Sequence`() {
+        val first = sequenceOf("Portugal", "Football", "Teams")
+        val other = sequenceOf("FCP", "The", "Champion")
+        val actual: Sequence<String> = first.concat(other)
+        val expected = sequenceOf("Portugal", "Football", "Teams", "FCP", "The", "Champion")
+        assertContentEquals(expected, actual)
+    }
+
+    @Test fun `Collapse a sequence of Strings`() {
+        val letters = sequenceOf("a", "b", "b", "b", "a", "c", "a", "a", "x", "b")
+        val actual: Sequence<String> = letters.collapse()
+        val expected = sequenceOf("a", "b", "a", "c", "a", "x", "b")
+        assertContentEquals(expected, actual)
+    }
+}
+/**
+ * Merges series of adjacent Elements.
+ * NOTICE: Do not use any auxiliary standard operation of Kotlin such as first(), elementAt, etc...
+ * Only use sequence{ ... yield()...} and iterator() if need.
+ */
+private fun <T : Any?> Sequence<T>.collapse(): Sequence<T> {
+    TODO("Not yet implemented")
 }

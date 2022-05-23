@@ -68,7 +68,15 @@ class Queries5Test {
 }
 
 private fun <T> Sequence<T>.window(size: Int): Sequence<Sequence<T>> {
-    TODO()
+    return sequence {
+        //....
+        //...
+        yield(sequence {
+            //...
+            //...
+            // yield()
+        })
+    }
 }
 
 /**

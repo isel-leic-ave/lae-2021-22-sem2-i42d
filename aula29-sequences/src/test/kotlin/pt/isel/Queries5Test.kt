@@ -47,17 +47,49 @@ class Queries5Test {
     }
 
     @Test fun `Collapse a sequence of Strings`() {
-        val letters = sequenceOf("a", "b", "b", "b", "a", "c", "a", "a", "x", "b")
-        val actual: Sequence<String> = letters.collapse()
-        val expected = sequenceOf("a", "b", "a", "c", "a", "x", "b")
+        val letters: Sequence<String?> = sequenceOf(null, "a", "b", "b", "b", "a", "c", "a", "a", "x", "b")
+        val actual: Sequence<String?> = letters.collapse()
+        val expected = sequenceOf(null, "a", "b", "a", "c", "a", "x", "b")
         assertContentEquals(expected, actual)
     }
+
+     @Test fun `Creates Window of size 3 of a sequence ofInt values`() {
+        val nrs = sequenceOf(1,2,3,4,5,6,7,8)
+        val expected = sequenceOf(
+            sequenceOf(1,2,3),
+            sequenceOf(4,5,6),
+            sequenceOf(7,8),
+        )
+        val actual = nrs.window(3).iterator()
+        expected.forEach {
+            assertContentEquals(it, actual.next())
+        }
+    }
 }
+
+private fun <T> Sequence<T>.window(size: Int): Sequence<Sequence<T>> {
+    TODO()
+}
+
 /**
  * Merges series of adjacent Elements.
  * NOTICE: Do not use any auxiliary standard operation of Kotlin such as first(), elementAt, etc...
  * Only use sequence{ ... yield()...} and iterator() if need.
  */
 private fun <T : Any?> Sequence<T>.collapse(): Sequence<T> {
-    TODO("Not yet implemented")
+
+    val iterator = this.iterator()
+    if(!iterator.hasNext()) return emptySequence()
+
+    return sequence {
+        var before: T = iterator.next()
+        yield(before)
+        while (iterator.hasNext()){
+            val elem = iterator.next()
+            if(elem != before){
+                yield(elem)
+                before = elem
+            }
+        }
+    }
 }

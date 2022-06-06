@@ -48,7 +48,7 @@ class CloseResourcesTest {
             assertFailsWith<FileSystemException> {
                 println(Path(OUT).deleteIfExists())
             }
-        }
+        } // Implicit: finally { fo.close() }
         /*
          * Once the handle is release we can safely delete out.txt file.
          */

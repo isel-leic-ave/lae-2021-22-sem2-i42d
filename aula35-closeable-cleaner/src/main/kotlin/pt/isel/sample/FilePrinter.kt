@@ -19,13 +19,13 @@ private val cleaner = Cleaner.create()
  * What to do when we have a Closeable class???
  * R: We have to implement Closeable too and override close()
  *
- * NOTICE this a naif approach. StringBuilder is not the most effective buffer.
+ * NOTICE this is a naif approach. StringBuilder is not the most effective buffer.
  */
 class FilePrinter(path: String) : Closeable {
     private val threshold = 16
-    val out = FileOutputStream(path)
-    val buffer = StringBuilder()
-    val register: Cleanable = cleaner.register(this, FilePrinterCleanable(out, buffer))
+    private val out = FileOutputStream(path)
+    private val buffer = StringBuilder()
+    private val register: Cleanable = cleaner.register(this, FilePrinterCleanable(out, buffer))
 
     fun print(msg: String) {
         buffer.append(msg)
@@ -34,11 +34,14 @@ class FilePrinter(path: String) : Closeable {
             buffer.clear()
         }
     }
-
+    /**
+     * CALL cleanup code via register that will remove the
+     * FilePrinterClenable object from the cleaner.
+     * Otherwise, you may get the cleanup called twice!!!
+     */
     override fun close() {
         register.clean()
     }
-
     /**
      * We call the close() of all properties Objects that are Closeable.
      * !!!! ATTENTION control execution with a flag.
@@ -47,6 +50,8 @@ class FilePrinter(path: String) : Closeable {
     /*
     override fun close() {
         if(buffer.isNotEmpty()) {
+            // May throw an Exception if the out stream is already closed.
+            //
             out.write(buffer.toString().toByteArray())
         }
         out.close()
